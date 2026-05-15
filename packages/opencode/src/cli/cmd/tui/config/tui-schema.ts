@@ -52,6 +52,11 @@ export const DiffStyle = Schema.Literals(["auto", "stacked"]).annotate({
   description: "Control diff rendering style: 'auto' adapts to terminal width, 'stacked' always shows single column",
 })
 
+export const BidiMode = Schema.Literals(["auto", "always", "never"]).annotate({
+  description:
+    "Bidirectional text rendering mode for assistant output: 'auto' wraps lines containing RTL characters with Unicode isolates, 'always' wraps every line, 'never' disables wrapping",
+})
+
 export const Attention = Schema.Struct({
   enabled: Schema.optional(Schema.Boolean),
   notifications: Schema.optional(Schema.Boolean),
@@ -74,5 +79,6 @@ export const TuiInfo = Schema.Struct({
   }),
   scroll_acceleration: Schema.optional(ScrollAcceleration),
   diff_style: Schema.optional(DiffStyle),
+  bidi: Schema.optional(BidiMode),
   mouse: Schema.optional(Schema.Boolean).annotate({ description: "Enable or disable mouse capture (default: true)" }),
 })

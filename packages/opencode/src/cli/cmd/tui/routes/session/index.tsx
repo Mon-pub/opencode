@@ -1497,6 +1497,7 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
     // OpenRouter sends encrypted reasoning data that appears as [REDACTED]
     return props.part.text.replace("[REDACTED]", "").trim()
   })
+  const fullText = createMemo(() => "_Thinking:_ " + content())
   return (
     <Show when={content() && ctx.showThinking()}>
       <box
@@ -1513,9 +1514,10 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
           drawUnstyledText={false}
           streaming={true}
           syntaxStyle={subtleSyntax()}
-          content={"_Thinking:_ " + content()}
+          content={fullText()}
           conceal={ctx.conceal()}
           fg={theme.textMuted}
+          bidi={ctx.tui.bidi ?? "auto"}
         />
       </box>
     </Show>
@@ -1525,17 +1527,19 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
 function TextPart(props: { last: boolean; part: TextPart; message: AssistantMessage }) {
   const ctx = use()
   const { theme, syntax } = useTheme()
+  const rawText = createMemo(() => props.part.text.trim())
   return (
-    <Show when={props.part.text.trim()}>
+    <Show when={rawText()}>
       <box id={"text-" + props.part.id} paddingLeft={3} marginTop={1} flexShrink={0}>
         <markdown
           syntaxStyle={syntax()}
           streaming={true}
           internalBlockMode="top-level"
-          content={props.part.text.trim()}
+          content={rawText()}
           conceal={ctx.conceal()}
           fg={theme.markdownText}
           bg={theme.background}
+          bidi={ctx.tui.bidi ?? "auto"}
         />
       </box>
     </Show>
